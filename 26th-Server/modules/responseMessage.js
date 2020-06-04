@@ -7,11 +7,12 @@ module.exports = {
     DELETE_USER: "회원 탈퇴 성공",
     ALREADY_ID: "이미 사용중인 아이디입니다.",
 
+    // 로그인
+    NO_USER: "Id가 잘못되었습니다.",
+
     // 배너
     BANNER_SUCCESS: "배너 조회 성공",
     BANNER_FAIL: "배너 조회 실패",
-
-
 
     //DB 에러
     DB_ERROR: "DB에러",
