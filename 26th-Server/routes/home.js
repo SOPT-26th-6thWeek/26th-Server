@@ -8,76 +8,44 @@ let category = require('../models/category');
 
 
 // 배너불러오기
-router.get('/banner', async function(req,res){
-    const result = await banner.selectAllBanner();
+router.get('/banner', async function (req, res) {
+        const result = await banner.selectAllBanner();
 
-    if(result.length ==0 ){
-        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.BANNER_FAIL));
-        
-    }
+        if (result.length == 0) {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.BANNER_FAIL));
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.BANNER_SUCCESS,{result}));
-}),
+        }
 
-// 카테고리 목록 불러오기
-router.get('/category',async function(req,res){
-    const result = await category.callCategoryName();
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.BANNER_SUCCESS, result));
+    }),
 
-    if(result.length ==0 ){
-        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.CATEGORY_FAIL));
-        
-    }
+    // 카테고리 목록 불러오기
+    router.get('/category', async function (req, res) {
+        const result = await category.callCategoryName();
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.CATEGORY_SUCCESS,{ result}));
-     
-}),
+        if (result.length == 0) {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.CATEGORY_FAIL));
 
-//홈 화면 가구 리스트 불러오기
-// 가구리스트 불러올때와 동일
+        }
 
-router.get('/', async function(req,res){
-    const result = await category.callFurnitureList();
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
+            result
+        }));
 
+    }),
 
-    if(result.length ==0 ){
-        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.CATEGORY_FAIL));
-        
-    }
+    // 가구 리스트 전체 불러오기
+    router.get('/:category', async function (req, res) {
+        const cate = req.params.category;
 
-    res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.CATEGORY_SUCCESS,{ result  }));
-})
+        const result = await category.callProductList(cate);
 
-// 가구 리스트 전체 불러오기
-router.get('/category/furniture', async function(req,res){
+        if (result.length == 0) {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.CATEGORY_FAIL));
+        }
 
-    const result = await category.callFurnitureList();
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.PRODUCT_READ_SUCCESS, result));
 
-
-    if(result.length ==0 ){
-        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.CATEGORY_FAIL));
-        
-    }
-
-    res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.CATEGORY_SUCCESS,{ result  }));
-      
-
-})
-
-
-//하위가구 보여주기
-router.get('/category/subobject', async function(req,res){
-
-    const result = await category.callSubObject();
-
-
-    if(result.length ==0 ){
-        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.CATEGORY_FAIL));
-        
-    }
-
-    res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.CATEGORY_SUCCESS,{ result  }));
-      
-
-})
+    })
 
 module.exports = router;

@@ -21,6 +21,9 @@ router.get("/:uid", async (req, res) => {
 
     // 장바구니 조회
     const result = await ShoppingBag.selectAllBag(uid);
+    if (result.length == 0) {
+        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, resMessage.READ_FAIL));
+    }
 
     // 성공
     res.status(statusCode.OK).send(util.success(statusCode.OK, resMessage.READ_SUCCESS, result));

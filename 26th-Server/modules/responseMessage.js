@@ -28,6 +28,10 @@ module.exports = {
     CATEGORY_SUCCESS: '카테고리 목록을 불러왔습니다.',
     CATEGORY_FAIL: '카테고리 목록을 불러오는데 실패했습니다.',
 
+    // 상품리스트
+    PRODUCT_READ_SUCCESS: '상품리스트 조회 성공',
+    PRODUCT_READ_FAIL: '상품리스트 조회 실패',
+
     // shoppingbag 서버 구축
     READ_SUCCESS: "장바구니 조회 성공",
     READ_FAIL: "장바구니 조회 실패",
