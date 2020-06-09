@@ -21,25 +21,34 @@ const category = {
         }
     },
 
-    callProductList: async (cate) => {
-        const query1 = `SELECT * FROM ${cate}`;
-        const result1 = []
+    callFurnitureList: async (id) => {
+        // 만약 옵션이 안달린 가구면 가구 테이블이랑 가구옵션테이블에 index값 똑같이 해주고 하나만 나오게 해준다.
+        //const query1 = `SELECT * FROM category a , furniture b WHERE a.categoryIdx = b.categoryIdx`;
+        // 옵션이 달린 가구 목록 보여주기.
+
+        // const query1 = `SELECT * FROM category a , furniture b, furnitureOption c WHERE a.categoryIdx = b.categoryIdx and b.f_idx = c.f_idx`;
+        //const query2 = `SELECT d_name,d_price,d_sale,d_image FROM category a , furniture b, furnitureOption c WHERE a.categoryIdx = b.categoryIdx and b.f_idx = c.f_idx`;
+
+        const query = `SELECT * FROM furniture WHERE categoryIdx = ${id}`;
 
         try {
-            const furnitureList = await pool.queryParam(query1);
-            furnitureList.forEach(async (furniture, index) => {
-                const query2 = `SELECT d_name, d_price, d_sale, d_image FROM (SELECT * FROM furnitureOption b LEFT JOIN furniture c ON b.f_Idx = c.Idx) t WHERE t.Idx=${furniture.Idx}`;
-                //const result2 = await pool.queryParam(query2)
-                result1[index] = {
-                    name: furnitureList[index].name,
-                    content: furnitureList[index].content,
-                    like: furnitureList[index].like,
-                    image: furnitureList[index].image,
-                    //subProduct: result2
-                }
-            });
+            const result = await pool.queryParam(query)
 
-            return result1;
+            //const result2 = [];
+
+            // for(var i = 0; i< 50; i++){
+
+
+            //     const query2 = `SELECT d_name,d_price,d_sale,d_image FROM category a , furniture b, furnitureOption c WHERE a.categoryIdx = b.categoryIdx and b.f_idx = c.f_idx`;
+
+            //     result3[i] = {
+            //         result1[i].,
+            //         subobject : await pool.queryParam(query2)
+            //     }   
+            // }
+
+            return result;
+
         } catch (err) {
             if (err.errno == 1062) {
                 console.log('signup ERROR : ', err.errno, err.code);
@@ -49,7 +58,46 @@ const category = {
             console.log('signup ERROR : ', err);
             throw err;
         }
+
+
+    },
+
+    countOptionNum: async (id) => {
+
+        const query = `SELECT * FROM furnitureOption WHERE f_idx = ${id}`;
+
+        try {
+            const result = await pool.queryParam(query);
+
+            return result.length;
+        } catch (err) {
+            if (err.errno == 1062) {
+                console.log('signup ERROR : ', err.errno, err.code);
+                return -1;
+            }
+            console.log('signup ERROR : ', err);
+            throw err;
+        }
+    },
+
+    callSubObject: async (id) => {
+        const query = `SELECT d_name,d_price,d_sale FROM furnitureOption WHERE f_Idx = ${id}`;
+
+
+        try {
+            const result = await pool.queryParam(query);
+
+            return result;
+        } catch (err) {
+            if (err.errno == 1062) {
+                console.log('signup ERROR : ', err.errno, err.code);
+                return -1;
+            }
+            console.log('signup ERROR : ', err);
+            throw err;
+        }
     }
+
 }
 
 module.exports = category;

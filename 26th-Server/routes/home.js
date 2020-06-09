@@ -16,7 +16,9 @@ router.get('/banner', async function (req, res) {
 
         }
 
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.BANNER_SUCCESS, result));
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.BANNER_SUCCESS, {
+            result
+        }));
     }),
 
     // 카테고리 목록 불러오기
@@ -28,22 +30,80 @@ router.get('/banner', async function (req, res) {
 
         }
 
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, result));
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
+            result
+        }));
 
     }),
 
-    // 가구 리스트 전체 불러오기
-    router.get('/:category', async function (req, res) {
-        const cate = req.params.category;
+    //홈 화면 가구 리스트 불러오기
+    // 가구리스트 불러올때와 동일
 
-        const result = await category.callProductList(cate);
+    router.get('/', async function (req, res) {
+        const result = await category.callFurnitureList();
+
 
         if (result.length == 0) {
-            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.PRODUCT_READ_FAIL));
-        } else {
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.PRODUCT_READ_SUCCESS, result));
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.CATEGORY_FAIL));
+
         }
 
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
+            result
+        }));
     })
+
+// 가구 리스트 전체 불러오기
+router.get('/category/:id', async function (req, res) {
+    const id = req.params.id;
+    const result = await category.callFurnitureList(id);
+    console.log(result)
+
+    for (var i in result) {
+        const countOption = await category.callSubObject(result[i].Idx);
+
+
+        result[i].option = countOption;
+
+
+    }
+
+
+
+    // if(result.length ==0 ){
+    //     res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.CATEGORY_FAIL));
+
+    // }
+
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
+        result
+    }));
+
+
+})
+
+
+//하위가구 보여주기
+router.get('/category/subobject', async function (req, res) {
+
+    //const result = await category.callSubObject();
+
+    // for(const i = 0; i< result.length; i++){
+
+    //     result[i].topdata.pu
+
+    // }
+
+    if (result.length == 0) {
+        res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.CATEGORY_FAIL));
+
+    }
+
+    res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
+        result
+    }));
+
+
+})
 
 module.exports = router;
