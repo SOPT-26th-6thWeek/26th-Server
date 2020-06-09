@@ -28,9 +28,7 @@ router.get('/banner', async function (req, res) {
 
         }
 
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, {
-            result
-        }));
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CATEGORY_SUCCESS, result));
 
     }),
 
@@ -41,10 +39,10 @@ router.get('/banner', async function (req, res) {
         const result = await category.callProductList(cate);
 
         if (result.length == 0) {
-            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.CATEGORY_FAIL));
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.PRODUCT_READ_FAIL));
+        } else {
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.PRODUCT_READ_SUCCESS, result));
         }
-
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.PRODUCT_READ_SUCCESS, result));
 
     })
 
